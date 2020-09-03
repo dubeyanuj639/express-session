@@ -8,28 +8,38 @@ mongoose.connect(config.mongo_url, { useNewUrlParser: true });
 const app = express()
 app.use(cookieParser())
 app.use(session({
-    secret: '*********',
+    secret: 'Anuj@junA',
     saveUninitialized: true,
     resave: true,
-    cookie: { maxAge: 20000 }, //session Expiration Time 
+    rolling: true, // reset expiration on every response
+    cookie: { maxAge: 5 * 1000 }, //session Expiration Time 5 seconds
     store: new MongoStore({ mongooseConnection: mongoose.connection })
 }))
 
-app.get('/', (req, res, next) => {
-    if (req.session.views) {
-        console.log("Session Id =>", req.sessionID)
-        req.session.views++
-        res.setHeader('Content-Type', 'text/html')
-        res.write('<p>views: ' + req.session.views + '</p>')
-        res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>')
-        res.end()
-    }
-    else {
-        req.session.views = 1;
-        res.send('refresh page')
-    }
+
+app.get('/test1', (req, res) => {
+    console.log("this is test1 -->", req.sessionID)
+    console.log("your session will expires in seconds ->", req.session.cookie.maxAge / 1000)
+    res.end()
+})
+
+app.get('/test2', (req, res) => {
+    console.log("this is test2 -->", req.sessionID)
+    console.log("your session will expires in seconds ->", req.session.cookie.maxAge / 1000)
+    res.end()
+})
+app.get('/test3', (req, res) => {
+    console.log("this is test3 -->", req.sessionID)
+    console.log("your session will expires in seconds ->", req.session.cookie.maxAge / 1000)
+    res.end()
+})
+app.get('/test4', (req, res) => {
+    console.log("this is test4 -->", req.sessionID)
+    console.log("your session will expires in seconds ->", req.session.cookie.maxAge / 1000)
+    res.end()
 })
 
 app.listen(config.server_port, (req, res) => {
     console.log("connected to port 4000")
 })
+
